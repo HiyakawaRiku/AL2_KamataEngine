@@ -31,6 +31,12 @@ void GameScene::Initialize() {
 
 	//デバックカメラの生成
 	debagCamera_ = new DebugCamera(1280, 720);
+
+	//軸方向表示の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+
+	//軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
+	AxisIndicator::GetInstance()->SetTargetCamera(&debagCamera_->GetCamera());
 }
 
 void GameScene::Update() {
@@ -78,13 +84,13 @@ void GameScene::Draw() {
 	// ３Dモデル描画
 	model_->Draw(worldTransfrom_, camera_, textureHandle_);
 
+	model_->Draw(worldTransfrom_, debagCamera_->GetCamera(), textureHandle_);
+
 	// 3Dモデル描画後処理
 	Model::PostDraw();
 
 	// ラインを描画する
 	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
-
-	model_->Draw(worldTransfrom_, debagCamera_->GetCamera(), textureHandle_);
 }
 
 GameScene::~GameScene() {
