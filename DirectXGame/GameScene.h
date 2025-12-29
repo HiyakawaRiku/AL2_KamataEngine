@@ -12,6 +12,8 @@ public:
 	~GameScene();
 
 private:
-	KamataEngine::Model* model_ = nullptr;
+	KamataEngine::Model* modelBlock_ = nullptr;
+	KamataEngine::Camera camera_;
+
 	std::vector<KamataEngine::WorldTransform*> worldTransformBlocks_;
 };
