@@ -23,5 +23,5 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
-	KamataEngine::Camera* camera_ = nullptr;
+	KamataEngine::Camera* camera_;
 };

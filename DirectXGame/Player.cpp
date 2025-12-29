@@ -11,6 +11,7 @@ void Player::Initialize(KamataEngine::Model* model, uint32_t textureHadle,Kamata
 	camera_ = camera;
 
 	worldTransform_.Initialize();
+	camera_->Initialize();
 }
 
 void Player::Update() {
