@@ -3,31 +3,41 @@
 using namespace KamataEngine;
 
 void GameScene::Initialize() {
+	// ファイル名を指定してテクスチャハンドルを読み込む
 	textureHandle_ = TextureManager::Load("uvChecker.png");
 
+	// 3Dモデルデータの生成
 	model_ = Model::Create();
 
+	// カメラの初期化
 	camera_ = new Camera();
 
+	// 自キャラの生成
 	player_ = new Player();
 
-	player_->Initialize(model_, textureHandle_,camera_ );
+	// 自キャラの初期化
+	player_->Initialize(model_, textureHandle_, camera_);
 }
 
-void GameScene::Update() { player_->Update(); }
+void GameScene::Update() {
+	// 自キャラの更新
+	player_->Update();
+}
 
-void GameScene::Draw() { 
-	
+void GameScene::Draw() {
+
 	Model::PreDraw();
 
+	// 自キャラの描画
 	player_->Draw();
 
 	Model::PostDraw();
-
 }
 
 GameScene::~GameScene() {
+	// 3Dモデルデータの解放
+	delete model_;
 
-delete model_; 
-delete player_;
+	// 自キャラの解放
+	delete player_;
 }

@@ -16,11 +16,12 @@ private:
 	//テクスチャハンドル
 	uint32_t textureHandle_ = 0;
 
-	//3Dモデル
+	//3Dモデルデータ
 	KamataEngine::Model* model_ = nullptr;
 
-	//デバックカメラ
+	//カメラ
 	KamataEngine::Camera* camera_ = nullptr;
 
+	//自キャラ
 	Player* player_ = nullptr;
 };
