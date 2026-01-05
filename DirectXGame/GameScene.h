@@ -15,5 +15,10 @@ private:
 	KamataEngine::Model* modelBlock_ = nullptr;
 	KamataEngine::Camera camera_;
 
-	std::vector<KamataEngine::WorldTransform*> worldTransformBlocks_;
+	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
+
+	//デバックカメラ有効
+	bool isDebugCameraActive_ = false;
+	//デバックカメラ
+	KamataEngine::DebugCamera* debugCamera_ = nullptr;
 };
