@@ -1,0 +1,21 @@
+#pragma once
+#include "KamataEngine.h"
+
+class Player {
+public:
+	/// <summary>
+	/// 初期化
+	/// </summary>
+	/// <param name="model"></param>
+	/// <param name="camera"></param>
+	/// <param name="position"></param>
+	void Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera, const KamataEngine::Vector3 position);
+
+private:
+	// ワールド変換データ
+	KamataEngine::WorldTransform worldTransform_;
+	//モデル
+	KamataEngine::Model* model_ = nullptr;
+	//テクスチャハンドル
+	uint32_t textureHandle_ = 0u;
+};
