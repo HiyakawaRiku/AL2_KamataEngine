@@ -5,11 +5,11 @@ class Player {
 
 public:
 	/// <summary>
-	/// しょｋ
+	/// 初期化
 	/// </summary>
-	/// <param name="model"></param>
-	/// <param name="textureHadle"></param>
-	/// <param name="camera"></param>
+	/// <param name="model">モデル</param>
+	/// <param name="textureHadle">テクスチャハンドル</param>
+	/// <param name="camera">カメラ</param>
 	void Initialize(KamataEngine::Model* model, uint32_t textureHadle, KamataEngine::Camera* camera);
 
 	/// <summary>
