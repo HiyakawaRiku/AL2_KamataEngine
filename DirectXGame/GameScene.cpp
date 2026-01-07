@@ -83,7 +83,7 @@ void GameScene::Initialize() {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
 			worldTransformBlocks_[i][j] = new WorldTransform();
 			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j*2.0f;
 			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
 		}
 	}
