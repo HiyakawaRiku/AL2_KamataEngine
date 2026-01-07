@@ -72,11 +72,6 @@ void GameScene::Initialize() {
 }
 
 void GameScene::Update() {
-#ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
-		isDebugCameraActive_ = true;
-	}
-#endif
 
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -93,22 +88,28 @@ void GameScene::Update() {
 
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
-
-			if (isDebugCameraActive_) {
-				// デバックカメラの更新
-				debugCamera_->Update();
-
-				const Camera& debugCamera = debugCamera_->GetCamera();
-				camera_.matView = debugCamera.matView;
-				camera_.matProjection = debugCamera.matProjection;
-				// ビュープロジェクション行列の転送
-				camera_.TransferMatrix();
-			} else {
-				// ビュープロジェクション行列の更新と転送
-				camera_.UpdateMatrix();
-			}
 		}
 	}
+
+	if (isDebugCameraActive_) {
+		// デバックカメラの更新
+		debugCamera_->Update();
+
+		const Camera& debugCamera = debugCamera_->GetCamera();
+		camera_.matView = debugCamera.matView;
+		camera_.matProjection = debugCamera.matProjection;
+		// ビュープロジェクション行列の転送
+		camera_.TransferMatrix();
+	} else {
+		// ビュープロジェクション行列の更新と転送
+		camera_.UpdateMatrix();
+	}
+
+	#ifdef _DEBUG
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
+		isDebugCameraActive_ = true;
+	}
+#endif
 }
 
 void GameScene::Draw() {
