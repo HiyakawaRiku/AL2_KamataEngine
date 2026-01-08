@@ -62,19 +62,15 @@ inline Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, c
 
 void GameScene::Initialize() {
 
-
-mapChipField_ = new MapChipField;
-// デバックカメラの生成
+	mapChipField_ = new MapChipField;
+	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
-		player_ = new Player();
-
-		// 3Dモデルの生成
+	// 3Dモデルの生成
 	model_ = Model::CreateFromOBJ("player", true);
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelBlock_ = Model::CreateFromOBJ("block", true);
 
-	
 	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
 	GenerateBlocks();
 
@@ -83,6 +79,7 @@ mapChipField_ = new MapChipField;
 	camera_->Initialize();
 
 	// 座標をマップチップ番号で指定
+	player_ = new Player();
 	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(0, 19);
 	player_->Initialize(model_, camera_, playerPosition);
 
@@ -110,7 +107,6 @@ mapChipField_ = new MapChipField;
 			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * (i + 1) * 2.0f + (j % 2);
 		}
 	}
-
 
 	// 天球の生成
 	skydome_ = new Skydome();
