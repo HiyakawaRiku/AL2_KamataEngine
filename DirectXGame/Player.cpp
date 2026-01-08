@@ -5,7 +5,7 @@
 using namespace KamataEngine;
 
 // --- 行列の掛け算 ---
-Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
+inline Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	Matrix4x4 result;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
@@ -19,7 +19,7 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 }
 
 // --- スケール行列の作成 ---
-Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
+inline Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 	Matrix4x4 result = {0};
 	result.m[0][0] = scale.x;
 	result.m[1][1] = scale.y;
@@ -29,7 +29,7 @@ Matrix4x4 MakeScaleMatrix(const Vector3& scale) {
 }
 
 // --- 回転行列の作成 (XYZ順) ---
-Matrix4x4 MakeRotateXYZMatrix(const Vector3& rotate) {
+inline Matrix4x4 MakeRotateXYZMatrix(const Vector3& rotate) {
 	// 各軸の回転行列を計算して合成する処理（省略版として結果のみ）
 	// 本来は Sin, Cos を使って X, Y, Z それぞれ作り Multiply する
 	Matrix4x4 rx = {1, 0, 0, 0, 0, cosf(rotate.x), sinf(rotate.x), 0, 0, -sinf(rotate.x), cosf(rotate.x), 0, 0, 0, 0, 1};
@@ -40,7 +40,7 @@ Matrix4x4 MakeRotateXYZMatrix(const Vector3& rotate) {
 }
 
 // --- 平行移動行列の作成 ---
-Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
+inline Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 	Matrix4x4 result = {0};
 	result.m[0][0] = 1.0f;
 	result.m[1][1] = 1.0f;
@@ -53,7 +53,7 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 }
 
 // --- 【本題】アフィン変換行列の作成 ---
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+inline Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 matScale = MakeScaleMatrix(scale);
 	Matrix4x4 matRot = MakeRotateXYZMatrix(rotate);
 	Matrix4x4 matTrans = MakeTranslateMatrix(translate);
