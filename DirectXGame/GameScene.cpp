@@ -61,6 +61,7 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 }
 
 void GameScene::Initialize() {
+	// 3Dモデルデータの生成
 	modelBlock_ = Model::Create();
 
 	// 要素数
@@ -78,13 +79,13 @@ void GameScene::Initialize() {
 		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
 	}
 
-	// ブロックの生成
+	// キューブの生成
 	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
 		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
 			worldTransformBlocks_[i][j] = new WorldTransform();
 			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j*2.0f;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * (i + 1) * 2.0f + (j % 2) * 2.0f;
 		}
 	}
 
@@ -96,20 +97,13 @@ void GameScene::Initialize() {
 
 void GameScene::Update() {
 
-#ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
-		isDebugCameraActive_ = true;
-	}
-#endif
-
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
-
 			if (!worldTransformBlock)
 				continue;
 
-			// アフィン変換行列の作成（各ブロックのSRTを使用）
+			// アフィン変換行列の作成
 			Matrix4x4 affineMatrix = MakeAffineMatrix(worldTransformBlock->scale_, worldTransformBlock->rotation_, worldTransformBlock->translation_);
 
 			// ワールド行列に代入
@@ -117,22 +111,28 @@ void GameScene::Update() {
 
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
-
-			if (isDebugCameraActive_) {
-				// デバックカメラの更新
-				debugCamera_->Update();
-
-				const Camera& debugCamera = debugCamera_->GetCamera(); 
-				camera_.matView = debugCamera.matView;
-				camera_.matProjection = debugCamera.matProjection;
-				// ビュープロジェクション行列の転送
-				camera_.TransferMatrix();
-			} else {
-				// ビュープロジェクション行列の更新と転送
-				camera_.UpdateMatrix();
-			}
 		}
 	}
+
+	if (isDebugCameraActive_) {
+		// デバックカメラの更新
+		debugCamera_->Update();
+
+		const Camera& debugCamera = debugCamera_->GetCamera();
+		camera_.matView = debugCamera.matView;
+		camera_.matProjection = debugCamera.matProjection;
+		// ビュープロジェクション行列の転送
+		camera_.TransferMatrix();
+	} else {
+		// ビュープロジェクション行列の更新と転送
+		camera_.UpdateMatrix();
+	}
+
+#ifdef _DEBUG
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
+		isDebugCameraActive_ = true;
+	}
+#endif
 }
 
 void GameScene::Draw() {
@@ -152,7 +152,9 @@ void GameScene::Draw() {
 }
 
 GameScene::~GameScene() {
+	// 3Dモデルデータの解放
 	delete modelBlock_;
+
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
 		for (WorldTransform* worldTransformBlock : worldTransformBlockLine) {
 			delete worldTransformBlock;

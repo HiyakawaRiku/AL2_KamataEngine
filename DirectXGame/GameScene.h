@@ -12,13 +12,14 @@ public:
 	~GameScene();
 
 private:
+	// 3Dモデルデータ
 	KamataEngine::Model* modelBlock_ = nullptr;
 	KamataEngine::Camera camera_;
 
 	std::vector<std::vector<KamataEngine::WorldTransform*>> worldTransformBlocks_;
 
-	//デバックカメラ有効
+	// デバックカメラ有効
 	bool isDebugCameraActive_ = false;
-	//デバックカメラ
+	// デバックカメラ
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
 };
