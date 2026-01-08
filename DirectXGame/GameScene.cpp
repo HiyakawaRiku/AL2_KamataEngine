@@ -62,16 +62,16 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 
 void GameScene::Initialize() {
 	// 3Dモデルの生成
-	model_ = Model::Create();
+	model_ = Model::CreateFromOBJ("player", true);
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
-	modelBlock_ = Model::Create();
+	modelBlock_ = Model::CreateFromOBJ("block", true);
 
 	// 要素数
 	const uint32_t kNumBlockVirtical = 10;
 	const uint32_t kNumBlockHorizontal = 20;
 	// ブロック1個分の幅
-	const float kBlockWidth = 2.0f;
-	const float kBlockHeight = 2.0f;
+	const float kBlockWidth = 1.0f;
+	const float kBlockHeight = 1.0f;
 
 	// 要素数を変更する
 	// 列数を設定(縦方向のブロック数)
@@ -87,36 +87,30 @@ void GameScene::Initialize() {
 			worldTransformBlocks_[i][j] = new WorldTransform();
 			worldTransformBlocks_[i][j]->Initialize();
 			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * i;
+			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * (i + 1) * 2.0f + (j % 2);
 		}
 	}
-	
-    camera_ = new Camera();
+
+	camera_ = new Camera();
 	camera_->farZ = 800;
 	camera_->Initialize();
 
-	//天球の生成
+	// 天球の生成
 	skydome_ = new Skydome();
-	skydome_->Initialize(modelSkydome_,camera_);
+	skydome_->Initialize(modelSkydome_, camera_);
 
 	// デバックカメラの生成
 	debugCamera_ = new DebugCamera(1280, 720);
 
-	textureHandle_ = TextureManager::Load("uvChecker.png");
+	textureHandle_ = TextureManager::Load("player/player.png");
 
 	player_ = new Player();
 
 	player_->Initialize(model_, textureHandle_, camera_);
 }
 
-void GameScene::Update() { 
+void GameScene::Update() {
 	skydome_->Update();
-
-	#ifdef _DEBUG
-	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
-		isDebugCameraActive_ = true;
-	}
-#endif
 
 	// ブロックの更新
 	for (std::vector<WorldTransform*>& worldTransformBlockLine : worldTransformBlocks_) {
@@ -133,22 +127,28 @@ void GameScene::Update() {
 
 			// 定数バッファに転送する
 			worldTransformBlock->TransferMatrix();
-
-			if (isDebugCameraActive_) {
-				// デバックカメラの更新
-				debugCamera_->Update();
-
-				const Camera& debugCamera = debugCamera_->GetCamera();
-				camera_->matView = debugCamera.matView;
-				camera_->matProjection = debugCamera.matProjection;
-				// ビュープロジェクション行列の転送
-				camera_->TransferMatrix();
-			} else {
-				// ビュープロジェクション行列の更新と転送
-				camera_->UpdateMatrix();
-			}
 		}
 	}
+
+	if (isDebugCameraActive_) {
+		// デバックカメラの更新
+		debugCamera_->Update();
+
+		const Camera& debugCamera = debugCamera_->GetCamera();
+		camera_->matView = debugCamera.matView;
+		camera_->matProjection = debugCamera.matProjection;
+		// ビュープロジェクション行列の転送
+		camera_->TransferMatrix();
+	} else {
+		// ビュープロジェクション行列の更新と転送
+		camera_->UpdateMatrix();
+	}
+
+#ifdef _DEBUG
+	if (Input::GetInstance()->TriggerKey(DIK_RETURN)) {
+		isDebugCameraActive_ = true;
+	}
+#endif
 }
 
 void GameScene::Draw() {
@@ -167,7 +167,6 @@ void GameScene::Draw() {
 	}
 
 	player_->Draw();
-
 
 	Model::PostDraw();
 }
