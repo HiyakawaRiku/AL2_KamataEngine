@@ -51,7 +51,7 @@ inline Matrix4x4 MakeTranslateMatrix(const Vector3& translate) {
 }
 
 // --- 【本題】アフィン変換行列の作成 ---
-inline Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 matScale = MakeScaleMatrix(scale);
 	Matrix4x4 matRot = MakeRotateXYZMatrix(rotate);
 	Matrix4x4 matTrans = MakeTranslateMatrix(translate);
