@@ -13,6 +13,12 @@ public:
 	void Update();
 	void Draw();
 
+	/// <summary>
+	/// ワールド変換データの取得
+	/// </summary>
+	/// <returns>ワールド変換データ</returns>
+	const KamataEngine::WorldTransform& GetWorldTransform() const { return worldTransform_; }
+
 private:
 	// ワールド変換データ
 	KamataEngine::WorldTransform worldTransform_;
@@ -51,4 +57,6 @@ private:
 	static inline const float kLimitFallSpeed = 1.0f;
 	// ジャンプ初速(上方向)
 	static inline const float kJumpAcceleration = 1.0f;
+
+	const KamataEngine::Vector3& GetVelocity() const { return velocity_; }
 };

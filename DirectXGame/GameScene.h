@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Skydome.h"
 #include <vector>
+#include "CameraController.h"
 
 class GameScene {
 public:
@@ -38,4 +39,6 @@ private:
 	KamataEngine::DebugCamera* debugCamera_ = nullptr;
 
 	Player* player_ = nullptr;
+	CameraController* cameraController_ = nullptr;
+
 };

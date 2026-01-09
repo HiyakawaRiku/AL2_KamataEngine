@@ -71,8 +71,6 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateFromOBJ("skydome", true);
 	modelBlock_ = Model::CreateFromOBJ("block", true);
 
-	mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
-	GenerateBlocks();
 
 	camera_ = new Camera();
 	camera_->farZ = 800;
@@ -80,37 +78,23 @@ void GameScene::Initialize() {
 
 	// 座標をマップチップ番号で指定
 	player_ = new Player();
-	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(0, 19);
+	Vector3 playerPosition = mapChipField_->GetMapChipPositionByIndex(10, 22);
 	player_->Initialize(model_, camera_, playerPosition);
 
-	// 要素数
-	const uint32_t kNumBlockVirtical = 10;
-	const uint32_t kNumBlockHorizontal = 20;
-	// ブロック1個分の幅
-	const float kBlockWidth = 1.0f;
-	const float kBlockHeight = 1.0f;
-
-	// 要素数を変更する
-	// 列数を設定(縦方向のブロック数)
-	worldTransformBlocks_.resize(kNumBlockVirtical);
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		// 列数を設定(横方向のブロック数)
-		worldTransformBlocks_[i].resize(kNumBlockHorizontal);
-	}
-
-	// ブロックの生成
-	for (uint32_t i = 0; i < kNumBlockVirtical; ++i) {
-		for (uint32_t j = 0; j < kNumBlockHorizontal; ++j) {
-			worldTransformBlocks_[i][j] = new WorldTransform();
-			worldTransformBlocks_[i][j]->Initialize();
-			worldTransformBlocks_[i][j]->translation_.x = kBlockWidth * j;
-			worldTransformBlocks_[i][j]->translation_.y = kBlockHeight * (i + 1) * 2.0f + (j % 2);
-		}
-	}
+		mapChipField_->LoadMapChipCsv("Resources/blocks.csv");
+	GenerateBlocks();
 
 	// 天球の生成
 	skydome_ = new Skydome();
 	skydome_->Initialize(modelSkydome_, camera_);
+	
+	cameraController_ = new CameraController();
+	cameraController_->Initialize();
+	cameraController_->SetTarget(player_);
+	cameraController_->Reset();
+
+	//移動範囲の指定
+
 }
 
 void GameScene::Update() {
@@ -148,6 +132,8 @@ void GameScene::Update() {
 		// ビュープロジェクション行列の更新と転送
 		camera_->UpdateMatrix();
 	}
+
+	cameraController_->Update();
 
 	player_->Update();
 

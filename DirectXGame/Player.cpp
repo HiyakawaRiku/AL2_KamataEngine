@@ -33,6 +33,7 @@ void Player::Initialize(KamataEngine::Model* model, KamataEngine::Camera* camera
 
 	// ワールド変換の初期化
 	worldTransform_.Initialize();
+
 	// camera_->Initialize();
 	worldTransform_.translation_ = position;
 }
