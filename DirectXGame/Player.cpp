@@ -3,8 +3,10 @@
 #include <algorithm>
 #include <cassert>
 #include <numbers>
+#include "AffineFunction.h"
 
 using namespace KamataEngine;
+using namespace MathUtility;
 
 float EaseOut(float& t, float start, float end, float InitialVelocity) {
 
@@ -88,18 +90,18 @@ void Player::Update() {
 		}
 		if (Input::GetInstance()->PushKey(DIK_UP)) {
 			// ジャンプ初速
-			velocity_.x += 0;
-			velocity_.y += kJumpAcceleration;
-			velocity_.z += 0;
+			velocity_ += {0, kJumpAcceleration, 0};
 		}
 	} else {
 		// 落下速度
-		velocity_.x += 0;
-		velocity_.y += -kJumpAcceleration;
-		velocity_.z += 0;
+		velocity_ += {0, -kGravityAcceleration, 0};
 		// 落下速度制限
-		velocity_.y = std::max(velocity_.y, kLimitFallSpeed);
+		velocity_.y = std::max(velocity_.y, -kLimitFallSpeed);
 	}
+
+	// 移動
+	worldTransform_.translation_.x += velocity_.x;
+	worldTransform_.translation_.y += velocity_.y;
 
 	// 旋回制御
 	if (turnTimer_ > 0.0f) {
@@ -110,7 +112,7 @@ void Player::Update() {
 		// 状態に応じた角度を取得する
 		float destinationRotationY = destinationRotationYTable[static_cast<uint32_t>(lrDirection_)];
 		// 自キャラの角度を設定する
-		worldTransform_.rotation_.y = destinationRotationY;
+		worldTransform_.rotation_.y = Lerp(turnFirstRotationY_, destinationRotationY, turnTimer_);
 	}
 
 	bool landing = false;
@@ -121,7 +123,9 @@ void Player::Update() {
 		}
 	}
 
+	// 接地判定
 	if (onGround_) {
+		// ジャンプ開始
 		if (velocity_.y > 0.0f) {
 			onGround_ = false;
 		}
@@ -129,22 +133,19 @@ void Player::Update() {
 		if (landing) {
 			// めり込み排斥
 			worldTransform_.translation_.y = 1.0f;
+			// 摩擦で横方向速度が減衰する
 			velocity_.x *= (1.0f - kAttenuation);
 			velocity_.y = 0.0f;
 			onGround_ = true;
 		}
 	}
 
-	// 移動
-	worldTransform_.translation_.x += velocity_.x;
-	worldTransform_.translation_.y += velocity_.y;
+	// 行列更新
+	// アフィン変換行列の作成（各ブロックのSRTを使用）
+	Matrix4x4 affineMatrix = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
 
-	//// 行列更新
-	//// アフィン変換行列の作成（各ブロックのSRTを使用）
-	// Matrix4x4 affineMatrix = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-
-	//// ワールド行列に代入
-	// worldTransform_.matWorld_ = affineMatrix;
+	// ワールド行列に代入
+	worldTransform_.matWorld_ = affineMatrix;
 
 	// 行列を定数バッファに転送
 	worldTransform_.TransferMatrix();

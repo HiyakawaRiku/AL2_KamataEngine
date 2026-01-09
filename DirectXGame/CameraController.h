@@ -1,6 +1,6 @@
 #pragma once
 #include "KamataEngine.h"
-#include "Player.h"
+
 
 struct Rect {
 	float left = 0.0f;   // 左端
@@ -9,19 +9,23 @@ struct Rect {
 	float top = 1.0f;    // 上端
 };
 
+// 前方宣言
+class Player;
+
 class CameraController {
 public:
 	void Initialize();
-	void Update();
+	void Update(KamataEngine::Camera &camera);
 	void SetTarget(Player* target) { target_ = target; }
 	void Reset();
-	void SetMoveableArea(const Rect& area) { this->movableArea_ = area; }
+	void SetMoveableArea(Rect const& area) { movableArea_ = area; }
 
 	private:
 
 		//カメラ
-	    KamataEngine::Camera* camera_ = nullptr;
+	    KamataEngine::Camera camera_;
 	    Player* target_ = nullptr;
+
 	    KamataEngine::Vector3 targetOffset_ = {0, 0, -15.0f};
 
 		//カメラ移動範囲
@@ -29,13 +33,11 @@ public:
 	    //カメラの目標座標
 	    KamataEngine::Vector3 targetCoordinates;
 		//座標補間割合
-	    static inline const float kInterpolationRate = 1.1f;
+	    static inline const float kInterpolationRate = 0.1f;
 
 		//速度掛け率
-	    static inline const float kVelocityBias = 1.1f;
+	    static inline const float kVelocityBias = 25.0f;
 
 		//追従対象の各方向へのカメラ移動範囲
-	    static inline const Rect margin_ = {0,100,0,100};
+	    static inline const Rect margin_ = {-20,20,12,-12};
 };
-
-class Player;
