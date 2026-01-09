@@ -27,9 +27,9 @@ private:
 
 	KamataEngine::Vector3 velocity_ = {};
 
-	static inline const float kAcceleration = 0.1f;
-	static inline const float kAttenuation = 0.1f;
-	static inline const float kLimitRunSpeed = 1.0f;
+	static inline const float kAcceleration = 0.01f;
+	static inline const float kAttenuation = 0.15f;
+	static inline const float kLimitRunSpeed = 0.6f;
 
 	enum class LRDirection {
 		kRight,
@@ -46,9 +46,9 @@ private:
 	//後地状態フラグ
 	bool onGround_ = true;
 	//重力加速度(下方向)
-	static inline const float kGravityAcceleration = 1.0f;
+	static inline const float kGravityAcceleration = 0.07f;
 	//最大落下速度(下方向)
-	static inline const float kLimitFallSpeed = 1.0f;
+	static inline const float kLimitFallSpeed = 0.7f;
 	//ジャンプ初速(上方向)
-	static inline const float kJumpAcceleration = 1.0f;
+	static inline const float kJumpAcceleration = 0.8f;
 };
