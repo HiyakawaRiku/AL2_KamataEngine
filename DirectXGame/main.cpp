@@ -1,6 +1,5 @@
-#include "GameScene.h"
 #include "KamataEngine.h"
-#include <Windows.h>
+#include "GameScene.h"
 
 using namespace KamataEngine;
 
@@ -8,14 +7,13 @@ using namespace KamataEngine;
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	// エンジンの初期化
-	KamataEngine::Initialize(L"LC1A_26_ヒヤカワ_リク_AL3");
+	KamataEngine::Initialize(L"LC1A_26_ヒヤカワ_リク_AL2");
 
 	// DirectXCommonインスタンスの取得
 	DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 	// ゲームシーンのインスタンス生成
 	GameScene* gameScene = new GameScene();
-
 	// ゲームシーンの初期化
 	gameScene->Initialize();
 
